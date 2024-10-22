@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String  
+  hashRt    String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@map("users")
+  users_services users_services[]
+}
+
+model services {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  cost        Float
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+
+  @@map("services")
+  users_services users_services[]
+}
+
+model users_services {
+  id        String   @id @default(uuid())
+  userId    String
+  serviceId String
+  service   services? @relation(fields: [serviceId], references: [id], onDelete: NoAction)
+  user      users?    @relation(fields: [userId], references: [id], onDelete: NoAction)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  @@map("users_services")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model seedsExecuted {
+  id         String   @id @default(uuid())
+  file       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("seeds_executed")
+}
