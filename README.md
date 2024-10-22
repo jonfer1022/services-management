@@ -49,7 +49,7 @@ Follow these steps to clone and run the project locally:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/jonfer1022/service-management.git
+   git clone https://github.com/jonfer1022/services-management.git
    ```
 
 2. Install dependencies:
